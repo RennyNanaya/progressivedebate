@@ -18,4 +18,24 @@ body {
 canvas {
   margin-top: 20px;
   max-width: 100%;
+
+}
+
+button {
+  margin: 10px;
+  padding: 20px;
+  font-size: 1.2em;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  width: 200px;
+}
+
+button.inactive {
+  background-color: green;
+}
+
+button.active {
+  background-color: red;
 }

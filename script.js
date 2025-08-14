@@ -1,4 +1,4 @@
-const NUM_BUTTONS = 4; // Change this to 2–6
+const NUM_BUTTONS = 2; // Change this to 2–6
 const exclusiveMode = document.getElementById("exclusiveToggle");
 const buttonsDiv = document.getElementById("buttons");
 const statsDiv = document.getElementById("stats");
@@ -7,15 +7,16 @@ let timers = Array(NUM_BUTTONS).fill(0);
 let active = Array(NUM_BUTTONS).fill(false);
 let startTimes = Array(NUM_BUTTONS).fill(null);
 let history = [];
+let buttons = [];
 
 function createButtons() {
   for (let i = 0; i < NUM_BUTTONS; i++) {
     const btn = document.createElement("button");
-    btn.textContent = `Speaker ${i + 1}`;
     btn.dataset.index = i;
-    btn.onclick = toggleTimer;
+    buttons.push(btn);
     buttonsDiv.appendChild(btn);
   }
+  updateButtonLabels();
 }
 
 function toggleTimer(e) {
@@ -39,6 +40,7 @@ function toggleTimer(e) {
   }
 
   updateStats();
+  updateButtonLabels();
 }
 
 function stopAllTimers() {
@@ -60,5 +62,27 @@ function updateStats() {
     statsDiv.innerHTML += `Speaker ${i + 1}: ${percent}%<br>`;
   });
 }
+
+function formatTime(ms) {
+  const totalMinutes = Math.floor(ms / 60000);
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+  return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
+}
+
+function updateButtonLabels() {
+  for (let i = 0; i < NUM_BUTTONS; i++) {
+    let elapsed = timers[i];
+    if (active[i]) {
+      elapsed += Date.now() - startTimes[i];
+    }
+    buttons[i].textContent = `Speaker ${i + 1} – ${formatTime(elapsed)}`;
+    buttons[i].className = active[i] ? "active" : "inactive";
+  }
+}
+
+
+// Update button labels every second
+setInterval(updateButtonLabels, 1000);
 
 createButtons();
